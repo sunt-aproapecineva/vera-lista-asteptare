@@ -1,0 +1,171 @@
+@import 'tailwindcss';
+
+/* ═══════════════════════════════════════════════════════════════
+   Sistemul vizual · Vera Lozovanu-Guțu
+   Culorile sunt din Figma (STUDY / pagina „Vera”).
+
+   DOUĂ grunduri pe toată pagina, nu mai multe:
+     studio  gri deschis cu reflector (fundalul ședinței foto)
+     scenă   aproape-negru cu reflector, pentru contrast
+   Singura excepție e blocul „Decorul”, unde schimbarea de culoare
+   ESTE ideea (mentă, reflector gri, maro, roșu).
+
+   Roșul #AD0003 e accent: butoane, un cuvânt pe titlu, cifre.
+   Titluri: Helvetica Neue, tracking strâns, cu UN cuvânt cules în
+   OT Miniature italic, roșu. OT Miniature se mai folosește doar la
+   cifre mari și la numele decorurilor.
+═══════════════════════════════════════════════════════════════ */
+
+@font-face {
+  font-family: 'OT Miniature';
+  src: url('/fonts/OTMiniature-Regular.woff2') format('woff2');
+  font-weight: 400;
+  font-style: normal;
+  font-display: swap;
+}
+@font-face {
+  font-family: 'OT Miniature';
+  src: url('/fonts/OTMiniature-RegularItalic.woff2') format('woff2');
+  font-weight: 400;
+  font-style: italic;
+  font-display: swap;
+}
+
+@theme {
+  --color-red: #ad0003;
+  --color-red-deep: #850002;
+  --color-red-soft: #e04346;
+  --color-mint: #a6f3e9;
+  --color-ink: #121010;
+  --color-ink-soft: #57504d;
+  --color-ink-mute: #8a837f;
+  --color-line: rgba(18, 16, 16, 0.12);
+  --color-studio: #efeeec;
+  --color-card: #ffffff;
+  --color-stage: #0f0d0c;
+  --color-stage-card: #1a1716;
+  --color-bone: #f3efeb;
+
+  --font-title: 'OT Miniature', 'Times New Roman', serif;
+  --font-body: 'Helvetica Neue', Helvetica, Arial, sans-serif;
+}
+
+html { background: var(--color-studio); }
+
+body {
+  margin: 0;
+  font-family: var(--font-body);
+  background: var(--color-studio);
+  color: var(--color-ink);
+  overflow-x: clip;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+h1, h2, h3 { text-wrap: balance; }
+p { text-wrap: pretty; }
+
+/* ── Grunduri ─────────────────────────────────────────────────── */
+.ground-studio {
+  background:
+    radial-gradient(70% 60% at 50% 28%, #ffffff 0%, rgba(255,255,255,0) 70%),
+    var(--color-studio);
+  color: var(--color-ink);
+}
+.ground-stage {
+  background:
+    radial-gradient(60% 55% at 50% 0%, #2b2624 0%, rgba(43,38,36,0) 75%),
+    var(--color-stage);
+  color: var(--color-bone);
+  /* textul secundar pe scenă e cald, nu gri plat */
+  --color-ink-soft: #b9b0aa;
+  --color-ink-mute: #8b837e;
+  --color-line: rgba(243, 239, 235, 0.12);
+}
+
+/* Decorurile (doar blocul „Decorul”) */
+.ground-mint {
+  background: radial-gradient(90% 80% at 50% 30%, #e3fcf8 0%, #a6f3e9 55%, #86ddd1 100%);
+  color: var(--color-ink);
+}
+.ground-spot {
+  background: radial-gradient(60% 75% at 50% 42%, #ffffff 0%, #d9d9d9 40%, #8f8f8f 80%, #5f5f5f 100%);
+  color: var(--color-ink);
+}
+.ground-brown {
+  background: radial-gradient(90% 90% at 50% 20%, #9d6b42 0%, #5a3a20 48%, #2a190c 100%);
+  color: #f6ede4;
+}
+.ground-red {
+  background: radial-gradient(90% 90% at 50% 25%, #cc0a0e 0%, #ad0003 48%, #6e0002 100%);
+  color: #ffffff;
+}
+
+/* ── Tipografie ───────────────────────────────────────────────── */
+.h-sec {
+  font-family: var(--font-body);
+  font-weight: 500;
+  letter-spacing: -0.035em;
+  line-height: 1.06;
+}
+.accent {
+  font-family: var(--font-title);
+  font-style: italic;
+  font-weight: 400;
+  color: var(--color-red);
+  letter-spacing: -0.01em;
+  font-size: 1.14em;
+  line-height: 0.92;
+}
+.ground-stage .accent { color: var(--color-red-soft); }
+.title {
+  font-family: var(--font-title);
+  font-weight: 400;
+  letter-spacing: -0.02em;
+  line-height: 0.9;
+}
+
+/* ── Ritm ─────────────────────────────────────────────────────── */
+.wrap {
+  width: 100%;
+  max-width: 1280px;
+  margin-inline: auto;
+  padding-inline: max(20px, 5vw);
+}
+@media (min-width: 1440px) {
+  .wrap { padding-inline: 64px; }
+}
+.section {
+  padding-block: clamp(96px, 11vw, 168px);
+}
+
+/* ── Apariție la scroll: o singură dată, discretă ─────────────── */
+.reveal {
+  opacity: 0;
+  transform: translateY(16px);
+  transition: opacity 0.7s cubic-bezier(0.22, 1, 0.36, 1),
+              transform 0.7s cubic-bezier(0.22, 1, 0.36, 1);
+}
+.reveal.is-in { opacity: 1; transform: none; }
+
+@keyframes fadeIn { from { opacity: 0 } to { opacity: 1 } }
+@keyframes fadeUp {
+  from { opacity: 0; transform: translateY(14px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+.anim-fade-in { animation: fadeIn 1s ease-out both; }
+.anim-fade-up { animation: fadeUp 0.8s cubic-bezier(0.22, 1, 0.36, 1) both; }
+
+:focus-visible {
+  outline: 2px solid var(--color-red);
+  outline-offset: 3px;
+  border-radius: 6px;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .anim-fade-in, .anim-fade-up {
+    animation-duration: 0.01ms !important;
+    animation-delay: 0ms !important;
+  }
+  .reveal { opacity: 1; transform: none; transition: none; }
+}
