@@ -1,25 +1,34 @@
-import type { ReactNode } from 'react'
+import type { CSSProperties, ReactNode } from 'react'
 import { ArrowUpRight } from 'lucide-react'
 import type { Title } from '../lib/content'
 
 /* Piesele comune ale sistemului. Toate secțiunile le folosesc pe
    acestea, ca pagina să arate ca un singur lucru. */
 
-/** Titlu de secțiune: Helvetica, cu un cuvânt în OT Miniature italic. */
+/** Titlu de secțiune: Helvetica, cu un cuvânt în OT Miniature italic.
+ *  Dacă `before` se termină cu un cuvânt de o literă („o”, „e”), spațiul
+ *  de după e nedespărțitor, ca litera să nu rămână singură la capăt de rând.
+ *  `id` și `tabIndex` servesc la mutarea focusului pe titlu (/multumesc). */
 export function SectionTitle({
   title,
   as: Tag = 'h2',
   className = '',
+  style,
+  id,
+  tabIndex,
 }: {
   title: Title
   as?: 'h1' | 'h2' | 'h3'
   className?: string
+  style?: CSSProperties
+  id?: string
+  tabIndex?: number
 }) {
   const [before, accent, after] = title
   return (
-    <Tag className={`h-sec ${className}`}>
+    <Tag id={id} tabIndex={tabIndex} className={`h-sec ${className}`} style={style}>
       {before}
-      {before && ' '}
+      {before && (/(^|\s)\S$/.test(before) ? '\u00a0' : ' ')}
       <span className="accent">{accent}</span>
       {after && (/^[.,!?]/.test(after) ? after : ` ${after}`)}
     </Tag>

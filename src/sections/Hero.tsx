@@ -19,13 +19,13 @@ export function Hero() {
   const tagY = useTransform(p, [0, 1], reduced ? ['0%', '0%'] : ['0%', '-60%'])
 
   return (
-    <section id="top" ref={ref} data-tone="light" className="ground-studio relative overflow-hidden md:h-[100svh] md:min-h-[720px]">
+    <section id="top" ref={ref} data-tone="light" className="ground-studio relative overflow-hidden md:grid md:min-h-[max(100svh,560px)]">
       {/* numele din spate, abia vizibil */}
       <motion.div aria-hidden="true" style={{ y: backY }} className="pointer-events-none absolute inset-x-0 bottom-[-4vw] flex justify-center">
         <span className="title select-none text-[46vw] leading-[0.8] text-black/[0.035] md:text-[30vw]">Vera</span>
       </motion.div>
 
-      <div className="wrap relative flex h-full flex-col pt-28 md:grid md:grid-cols-[1.3fr_minmax(0,28vw)_0.9fr] md:pt-0">
+      <div className="wrap relative flex h-full flex-col pt-28 md:grid md:grid-cols-[1.3fr_minmax(0,min(28vw,400px))_0.9fr] md:pt-0">
         {/* stânga: promisiunea, butonul, cifrele */}
         <div className="relative z-20 flex flex-col md:justify-between md:pb-12 md:pt-[26svh]">
           <div>
@@ -55,7 +55,7 @@ export function Hero() {
 
         {/* centru: Vera */}
         <div className="relative -mx-5 mt-6 h-[62svh] md:mx-0 md:mt-0 md:h-auto">
-          <motion.div style={{ y: veraY }} className="absolute bottom-0 left-1/2 h-full -translate-x-1/2 md:h-[90svh]">
+          <motion.div style={{ y: veraY }} className="absolute bottom-0 left-1/2 h-full -translate-x-1/2 md:h-[min(90svh,calc(100svh_-_88px),68vw,960px)]">
             <img
               src={IMG('vera-costum')}
               alt="Vera Lozovanu-Guțu, în costum, cu cravată roșie"
@@ -70,18 +70,21 @@ export function Hero() {
           {/* eticheta cu linie de legătură, ca un afiș de distribuție */}
           <motion.div
             style={{ y: tagY }}
-            className="anim-fade-up absolute bottom-[16%] left-[88%] z-10 hidden w-max md:block"
+            className="absolute bottom-[16%] left-[calc(100%+12px)] z-10 hidden w-max origin-left md:block md:max-lg:scale-90"
           >
-            <div className="flex items-center gap-2 text-[17px] font-medium">
-              <BadgeCheck size={18} className="text-red" aria-hidden="true" />
-              {HERO.tag.name}
+            {/* fade-ul stă pe un strat interior: animația (fill both) ar bate transformul de parallax */}
+            <div className="anim-fade-up">
+              <div className="flex items-center gap-2 text-[17px] font-medium">
+                <BadgeCheck size={18} className="text-red" aria-hidden="true" />
+                {HERO.tag.name}
+              </div>
+              <div className="ml-6 mt-1 border-t border-ink/25 pt-2 text-[13px] text-ink-mute">{HERO.tag.role}</div>
             </div>
-            <div className="ml-6 mt-1 border-t border-ink/25 pt-2 text-[13px] text-ink-mute">{HERO.tag.role}</div>
           </motion.div>
         </div>
 
         {/* dreapta: cine e și cine a format-o */}
-        <div className="relative z-20 hidden flex-col md:flex md:pt-[30svh]">
+        <div className="relative z-20 hidden flex-col md:flex md:pt-[30svh] lg:pl-6">
           <div className="ml-auto max-w-[22rem]">
             <span aria-hidden="true" className="mb-6 flex items-center">
               <span className="h-px w-40 bg-ink/30" />

@@ -15,9 +15,15 @@ export const IMG = (n: string) => `/img/${n}.webp`
 
 export const BRAND = 'Vera Lozovanu-Guțu'
 export const CTA = 'Mă înscriu pe listă'
+/* Varianta scurtă, pentru butonul din header pe telefon. */
+export const CTA_SHORT = 'Mă înscriu'
 export const SEATS = 20
 
 export type Title = [string, string, string]
+
+/* Titlul ca text simplu (document.title, h2 pentru cititorul de ecran).
+   Aceeași regulă de spații ca în SectionTitle. Nu folosi join(' '). */
+export const titleText = ([b, a, c]: Title) => (b ? b + ' ' : '') + a + (c ? (/^[.,!?]/.test(c) ? c : ' ' + c) : '')
 
 export const NAV = [
   { label: 'Metoda', href: '#metoda' },
@@ -36,9 +42,19 @@ export const SOCIAL = [
    deschide cu mesajul scris, dar fără destinatar.                 */
 export const WHATSAPP_NUMBER = ''
 
+/* Cheile sunt opțiunile din FORM.interest.options. „Încă nu știu” lipsește
+   intenționat: atunci mesajul nu mai spune ce o interesează. */
+export const INTEREST_PHRASE: Record<string, string> = {
+  'Consultație 1:1': 'consultația 1:1',
+  'Mentorat individual': 'mentoratul individual',
+  'Scena Vieții (grup)': 'Scena Vieții',
+}
+
 export const whatsappLink = (name?: string, interest?: string) => {
-  const hello = name?.trim() ? `Bună! Sunt ${name.trim()}.` : 'Bună!'
-  const want = interest && interest !== 'Încă nu știu' ? ` Mă interesează: ${interest}.` : ''
+  const n = (name ?? '').trim().replace(/(^|[\s-])(\p{L})/gu, (_m, p: string, c: string) => p + c.toLocaleUpperCase('ro'))
+  const hello = n ? `Bună! Sunt ${n}.` : 'Bună!'
+  const phrase = interest ? INTEREST_PHRASE[interest] : undefined
+  const want = phrase ? ` Mă interesează ${phrase}.` : ''
   const text = `${hello} M-am înscris pe listă și aș vrea să planific ședința bonus cu Vera.${want}`
   const base = WHATSAPP_NUMBER ? `https://wa.me/${WHATSAPP_NUMBER}` : 'https://wa.me/'
   return `${base}?text=${encodeURIComponent(text)}`
@@ -56,7 +72,7 @@ export const HERO = {
   tag: { name: 'Vera Lozovanu-Guțu', role: 'expertă în comunicare autentică' },
   stats: [
     ['15 ani', 'pe scenă, în teatru'],
-    ['3 fluxuri', 'de mentorat de grup'],
+    ['3 ediții', 'de mentorat de grup'],
   ] as [string, string][],
   note: 'Pentru consultație, mentorat individual sau de grup.',
 }
@@ -66,7 +82,7 @@ export const HERO = {
    situația, spatele e alegoria sau mecanismul, scurtat.          */
 export const PAIN = {
   label: 'Unde te recunoști',
-  title: ['La fiecare', 'doare', 'altfel.'] as Title,
+  title: ['Pe fiecare o', 'doare', 'altfel.'] as Title,
   hint: 'Apasă pe un card',
   flip: 'întoarce',
   cards: [
@@ -76,7 +92,7 @@ export const PAIN = {
     },
     {
       front: 'Ai galeria plină de filmări nepostate',
-      back: 'Patruzeci de scrisori scrise și netrimise. Iar omul căruia îi erau adresate nu știe nici că exiști.',
+      back: 'Patruzeci de scrisori scrise și netrimise. Iar omul căruia îi erau adresate nici nu știe că exiști.',
     },
     {
       front: 'La ședință ai răspunsul, iar pauza trece',
@@ -110,12 +126,12 @@ export const DECOR = {
   introImg: 'vera-rade',
   role: 'Rolul: tu',
   sets: [
-    { name: 'Camera', line: 'Reel-ul pe care îl amâni de o lună.', tone: 'mint' as DecorTone, img: 'vera-mana' },
+    { name: 'Camera', line: 'Reelul pe care îl amâni de o\u00a0lună.', tone: 'mint' as DecorTone, img: 'vera-mana' },
     { name: 'Ședința', line: 'Luni, la zece, cu toți ochii pe tine.', tone: 'spot' as DecorTone, img: 'vera-costum' },
-    { name: 'Acasă', line: 'Discuția pe care o tot amâni.', tone: 'brown' as DecorTone, img: 'vera-portret' },
+    { name: 'Acasă', line: 'Discuția pe care o\u00a0tot ocolești.', tone: 'brown' as DecorTone, img: 'vera-portret' },
     { name: 'Scena', line: 'Cinci minute la microfon, cu ai tăi în sală.', tone: 'red' as DecorTone, img: 'vera-dans' },
   ],
-  outro: 'Decorul se schimbă. Tu rămâi.',
+  outro: ['Decorul se schimbă.', 'Tu rămâi.', ''] as Title,
   outroSub: 'Asta lucrăm cu MPA: același om pe cameră, la ședință, acasă și pe scenă.',
 }
 
@@ -161,6 +177,7 @@ export const METHOD = {
 /* ── VERA ─────────────────────────────────────────────────────────
    Cifrele sunt din deck, slide „Profilul brandului”.              */
 export const ABOUT = {
+  heading: 'Despre Vera',
   label: 'Cine sunt',
   quoteStrong: 'Actorii cu patruzeci de ani de scenă au trac înainte de fiecare spectacol.',
   quoteRest: 'Nu le trece. Diferența e ce fac cu el.',
@@ -169,13 +186,14 @@ export const ABOUT = {
     ['15', 'ani de teatru'],
     ['5', 'ani de jurnalism'],
     ['5', 'ani de marketing'],
-    ['3', 'fluxuri de mentorat'],
+    ['3', 'ediții de mentorat'],
   ] as [string, string][],
-  body: 'Am crescut pe scenă. Apoi am lucrat în jurnalism, în marketing și opt ani alături de un trainer de vânzări. Peste tot am văzut același lucru: oameni foarte buni, care dispar exact când sunt priviți. Din asta s-a născut MPA.',
+  body: 'Am crescut pe scenă. Apoi am lucrat în jurnalism, în marketing și opt ani alături de un trainer de vânzări. Peste tot am văzut același lucru: oameni foarte buni, care dispar exact când sunt priviți. Din asta s-\u2060a născut MPA.',
 }
 
 /* ── MENTORII ─────────────────────────────────────────────────────
-   Textele sunt ale clientului. „Intensiv … Dubai, 2026” e din deck. */
+   „Intensiv … Dubai, 2026” e din deck. Textele despre cei doi mentori
+   sunt variante prudente, până le confirmă clientul (cifre, titluri). */
 export const MENTORS = {
   label: 'Mentorii mei',
   title: ['Am învățat de la oameni care', 'nu ratează', 'tonul.'] as Title,
@@ -184,14 +202,14 @@ export const MENTORS = {
       name: 'Teodora Mețiu',
       img: 'mentor-metiu',
       alt: 'Vera Lozovanu-Guțu alături de Teodora Mețiu',
-      text: 'De 15 ani antrenează președinți, europarlamentari și CEO ai celor mai mari corporații din lume să vorbească în public.',
+      text: 'De peste 15 ani îi pregătește pe oameni să vorbească în public. Printre ei sunt președinți de companii și membri de board din marile corporații din România, europarlamentari și candidați în funcții publice.',
       note: 'Public speaking la cel mai înalt nivel',
     },
     {
       name: 'Dmitrii Naghiev',
       img: 'mentor-naghiev',
       alt: 'Vera Lozovanu-Guțu alături de Dmitrii Naghiev',
-      text: 'Numărul 1 în televiziunea și filmul din Rusia de peste 30 de ani. Peste 150 de roluri, de la comedie la drame grele după fapte reale, fără să rateze vreodată tonul.',
+      text: 'De peste 30 de ani e unul dintre cei mai cunoscuți actori și prezentatori TV din Rusia. A jucat peste 100 de roluri, de la comedii la drame inspirate din fapte reale, și n-a ratat niciodată tonul.',
       note: 'Intensiv cu Dmitrii Naghiev, Dubai, 2026',
     },
   ],
@@ -229,7 +247,7 @@ export const FORMATS = {
       result: 'Te recunoști în video și în sală. Același om, peste tot.',
     },
     {
-      tab: 'Scena Vieții · grup',
+      tab: 'Scena Vieții (grup)',
       title: 'Scena Vieții',
       lead: 'Mentoratul de grup care te pregătește pentru cel mai important rol: rolul tău de zi cu zi.',
       points: [
@@ -244,12 +262,15 @@ export const FORMATS = {
 }
 
 /* ── LISTA ────────────────────────────────────────────────────────
-   Bonusurile cerute de client. Fraza din `side` e formularea care a
-   convertit în DM-uri (analiza vocii, secț. 7).                    */
+   Bonusurile cerute de client. Fraza din `side` pornește de la
+   formularea care a convertit în DM-uri (analiza vocii, secț. 7).
+   TODO client: primii SEATS de pe listă au loc garantat sau lista dă
+   doar prioritate? Dacă e prioritate, perk-ul 2 devine „Prioritate
+   la Scena Vieții”.                                                */
 export const WAITLIST = {
   label: 'Lista de așteptare',
-  title: ['Condiții doar pentru cei', 'de pe listă', '.'] as Title,
-  side: 'Lista e pentru oamenii care știu că au ceva valoros de spus, dar nu se simt siguri pe cameră și în fața oamenilor.',
+  title: ['Avantaje doar pentru cei', 'de pe listă', '.'] as Title,
+  side: 'Lista e pentru oamenii care știu că au ceva valoros de spus, dar nu se simt siguri pe cameră sau în fața unei săli.',
   perks: [
     {
       mark: '%',
@@ -257,14 +278,14 @@ export const WAITLIST = {
       text: 'La consultație și la mentorat, individual sau de grup. Doar pentru cei de pe listă.',
     },
     {
-      mark: '20',
+      mark: String(SEATS),
       title: 'Loc garantat la Scena Vieții',
-      text: `Grupa are doar ${SEATS} de locuri. Al tău e rezervat înainte să se deschidă înscrierea.`,
+      text: `Grupa are doar ${SEATS} de locuri. Le primesc primii de pe listă, înainte să se deschidă înscrierea.`,
     },
     {
       mark: '30',
       title: 'Ședință bonus cu mine',
-      text: '30 de minute, doar noi două. Vedem unde te blochezi și ce format ți se potrivește.',
+      text: '30 de minute, doar noi două. Ne cunoaștem și alegem împreună formatul care ți se potrivește.',
     },
     {
       mark: 'W',
@@ -275,34 +296,51 @@ export const WAITLIST = {
   note: 'Numele tău pe listă nu te obligă la NIMIC.',
 }
 
+/* Opțiunile din `interest` sunt și cheile din INTEREST_PHRASE (sus).
+   `errors` sunt mesajele de validare, în locul celor din browser.
+   TODO client: nota de confidențialitate (`privacy`) intră doar cu
+   textul primit, înainte de completarea FORM_ENDPOINT.              */
 export const FORM = {
-  title: 'Ultimul pas',
+  title: ['Ultimul', 'pas', ''] as Title,
   steps: ['Completezi formularul', 'Te duc pe WhatsApp, cu mesajul deja scris', 'Stabilim împreună ședința bonus'],
-  name: 'Prenumele',
+  name: 'Prenume',
   phone: 'Telefon (WhatsApp)',
   email: 'Email',
   interest: {
     label: 'Ce te interesează?',
     options: ['Consultație 1:1', 'Mentorat individual', 'Scena Vieții (grup)', 'Încă nu știu'],
   },
-  consent: 'Sunt de acord să fiu contactată în legătură cu lista de așteptare.',
+  consent: 'Sunt de acord să fiu contactată pe WhatsApp, telefon sau email despre lista de așteptare. Datele mele se folosesc doar pentru asta.',
+  errors: {
+    name: 'Scrie-ți prenumele.',
+    phone: 'Lasă-mi numărul de WhatsApp.',
+    phoneBad: 'Numărul pare incomplet. Verifică-l, de exemplu +373 69 123 456.',
+    emailMissing: 'Scrie-ți emailul.',
+    emailBad: 'Emailul pare incomplet. Verifică-l, te rog.',
+    interest: 'Alege o variantă, chiar și „Încă nu știu”.',
+    consent: 'Bifează acordul ca să te pot trece pe listă.',
+  },
   submit: CTA,
 }
 
-/* ── FINAL ────────────────────────────────────────────────────── */
+/* ── FINAL ──────────────────────────────────────────────────────────
+   \u2060 (word joiner) după cratimă: „să-l” nu se rupe la capăt de rând. */
 export const FINAL = {
   line: ['Un singur rol.', 'Oriunde.'],
-  sub: 'Dacă vrei să-l joci și tu, lista e deschisă.',
+  sub: 'Dacă vrei să-\u2060l joci și tu, lista e deschisă.',
 }
 
-/* ── MULȚUMESC ─────────────────────────────────────────────────── */
+/* ── MULȚUMESC ──────────────────────────────────────────────────────
+   `redirect(left)` e textul numărătorii. Dacă SECONDS din ThankYou.tsx
+   ajunge la 20 sau mai mult, textul are nevoie de „de secunde”.       */
 export const THANKYOU = {
-  eyebrow: 'Ești pe listă',
-  title: 'Locul tău e rezervat.',
-  body: 'Mai e un pas: scrie-mi pe WhatsApp și stabilim ședința bonus. Mesajul e deja scris, trebuie doar să-l trimiți.',
-  redirect: 'Te duc pe WhatsApp în câteva secunde…',
+  eyebrow: 'Mulțumesc',
+  title: ['Ești pe', 'listă', '.'] as Title,
+  body: 'Mai e un pas: scrie-\u2060mi pe WhatsApp și stabilim ședința bonus. Mesajul e deja scris, trebuie doar să-\u2060l trimiți.',
+  redirect: (left: number) =>
+    left > 1 ? `Te duc pe WhatsApp în ${left} secunde.` : left === 1 ? 'Te duc pe WhatsApp într-o secundă.' : 'Te duc pe WhatsApp acum.',
   cta: 'Deschide WhatsApp',
   stay: 'Rămân aici',
-  stopped: 'Am oprit redirecționarea. Butonul de mai sus te duce oricând.',
+  stopped: 'Bine, rămâi aici. Când vrei, butonul de mai jos te duce pe WhatsApp.',
   whisper: 'Ochii se tem, mâinile fac.',
 }

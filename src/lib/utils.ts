@@ -1,7 +1,8 @@
-import { useEffect, useRef, useState } from 'react'
+import { useEffect, useRef, useSyncExternalStore } from 'react'
 
 /**
- * Adaugă `.is-in` pe elementele `.reveal` din interior, o singură dată.
+ * Pune `data-in` pe elementele `.reveal` din interior, o singură dată
+ * (atribut, nu clasă: React rescrie className la re-randare).
  *
  * Preluat din landingul Cornelia. Deliberat NU folosește
  * IntersectionObserver: la un scroll rapid un element poate trece de la
@@ -23,7 +24,7 @@ export function useReveal<T extends HTMLElement>(margin = 0.08) {
     if (!pending.size) return
 
     if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
-      pending.forEach((t) => t.classList.add('is-in'))
+      pending.forEach((t) => t.setAttribute('data-in', ''))
       return
     }
 
@@ -33,7 +34,7 @@ export function useReveal<T extends HTMLElement>(margin = 0.08) {
       const limit = window.innerHeight * (1 - margin)
       pending.forEach((el) => {
         if (el.getBoundingClientRect().top < limit) {
-          el.classList.add('is-in')
+          el.setAttribute('data-in', '')
           pending.delete(el)
         }
       })
@@ -65,18 +66,15 @@ export function useReveal<T extends HTMLElement>(margin = 0.08) {
   return ref
 }
 
-/** `prefers-reduced-motion`, ascultat live. */
+/** `prefers-reduced-motion`, ascultat live. Pe server (pre-randare) e false. */
+const RM = '(prefers-reduced-motion: reduce)'
+const subscribeRM = (cb: () => void) => {
+  const mq = window.matchMedia(RM)
+  mq.addEventListener('change', cb)
+  return () => mq.removeEventListener('change', cb)
+}
 export function useReducedMotion() {
-  const [reduced, setReduced] = useState(
-    () => typeof window !== 'undefined' && window.matchMedia('(prefers-reduced-motion: reduce)').matches,
-  )
-  useEffect(() => {
-    const mq = window.matchMedia('(prefers-reduced-motion: reduce)')
-    const on = () => setReduced(mq.matches)
-    mq.addEventListener('change', on)
-    return () => mq.removeEventListener('change', on)
-  }, [])
-  return reduced
+  return useSyncExternalStore(subscribeRM, () => window.matchMedia(RM).matches, () => false)
 }
 
 /** Prenumele și formatul ales, păstrate pentru /multumesc (supraviețuiesc
@@ -86,7 +84,16 @@ export type Lead = { name: string; interest: string }
 export function readLead(): Lead {
   try {
     const raw = sessionStorage.getItem(LEAD_KEY)
-    if (raw) return JSON.parse(raw) as Lead
+    if (raw) {
+      const v: unknown = JSON.parse(raw)
+      if (v && typeof v === 'object') {
+        const o = v as Record<string, unknown>
+        return {
+          name: typeof o.name === 'string' ? o.name : '',
+          interest: typeof o.interest === 'string' ? o.interest : '',
+        }
+      }
+    }
   } catch {
     /* fără storage, mesajul pleacă fără prenume */
   }

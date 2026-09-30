@@ -9,11 +9,11 @@ export function Final() {
   const ref = useReveal<HTMLElement>()
 
   return (
-    <footer ref={ref} data-tone="dark" className="ground-stage relative overflow-hidden">
+    <footer ref={ref} data-tone="dark" className="ground-stage ground-cont relative overflow-hidden">
       <div className="wrap relative grid min-h-[92svh] items-end md:grid-cols-[1fr_1fr]">
         <div className="relative z-10 pb-20 pt-24 md:pb-32">
-          <h2 className="h-sec text-[3.4rem] sm:text-[5rem] lg:text-[6.2rem]">
-            {FINAL.line[0]}
+          <h2 className="h-sec text-[clamp(2.6rem,15vw,3.4rem)] sm:text-[5rem] md:text-[min(7.4vw,5rem)] lg:text-[min(7.4vw,5.2rem)] xl:text-[6.2rem]">
+            <span className="whitespace-nowrap">{FINAL.line[0]}</span>
             <br />
             <span className="accent">{FINAL.line[1]}</span>
           </h2>
@@ -29,7 +29,7 @@ export function Final() {
             width={1533}
             height={1600}
             loading="lazy"
-            className="absolute bottom-0 left-1/2 h-full w-auto max-w-none -translate-x-1/2 select-none md:left-[45%]"
+            className="absolute bottom-0 left-1/2 h-full w-auto max-w-none -translate-x-1/2 select-none md:left-[45%] lg:left-[60%] xl:left-[58%]"
             draggable={false}
           />
         </div>
@@ -39,7 +39,7 @@ export function Final() {
           <span>© 2026 {BRAND}</span>
           <nav className="flex gap-5">
             {SOCIAL.map((s) => (
-              <a key={s.label} href={s.href} target="_blank" rel="noreferrer" className="hover:text-bone">
+              <a key={s.label} href={s.href} target="_blank" rel="noreferrer" className="-my-3 py-3 hover:text-bone">
                 {s.label}
               </a>
             ))}

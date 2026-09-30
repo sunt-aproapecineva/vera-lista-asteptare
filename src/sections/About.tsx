@@ -12,9 +12,10 @@ export function About() {
 
   return (
     <section id="vera" ref={ref} data-tone="light" className="ground-studio">
+      <h2 className="sr-only">{ABOUT.heading}</h2>
       {/* 1. Vera */}
       <div className="wrap grid gap-10 pt-[clamp(96px,11vw,168px)] lg:grid-cols-[0.95fr_1.05fr] lg:gap-16">
-        <div className="relative order-2 -mx-5 h-[70svh] max-h-[760px] min-h-[460px] sm:mx-0 lg:order-1 lg:h-[780px]">
+        <div className="relative order-2 -mx-5 h-[70svh] max-h-[760px] min-h-[460px] overflow-hidden sm:mx-0 lg:order-1 lg:h-[780px] lg:overflow-visible">
           <img
             src={IMG('vera-portret')}
             alt="Vera Lozovanu-Guțu, portret, în rochie neagră"
@@ -30,7 +31,7 @@ export function About() {
           <Label className="reveal">{ABOUT.label}</Label>
           <blockquote className="reveal mt-8">
             <p className="h-sec text-[1.9rem] sm:text-[2.5rem] lg:text-[2.8rem]">
-              «{ABOUT.quoteStrong} <span className="text-ink-mute">{ABOUT.quoteRest}»</span>
+              „{ABOUT.quoteStrong} <span className="text-ink-mute">{ABOUT.quoteRest}”</span>
             </p>
             <footer className="mt-5 text-[14px] text-ink-mute">
               <span className="title text-[1.3rem] text-ink">
@@ -56,7 +57,7 @@ export function About() {
       <div className="border-t border-line">
         <div className="wrap section">
           <div className="grid gap-8 lg:grid-cols-[12rem_1fr] lg:gap-0">
-            <Label className="reveal">{MENTORS.label}</Label>
+            <Label className="reveal lg:self-start lg:pt-6">{MENTORS.label}</Label>
             <SectionTitle title={MENTORS.title} className="reveal max-w-[20ch] text-[2.5rem] sm:text-[3.4rem] lg:text-[3.9rem]" />
           </div>
 
@@ -82,7 +83,7 @@ export function About() {
                 <div className="mt-6 pl-9">
                   <h3 className="title text-[2.4rem] leading-none">{m.name}</h3>
                   <p className="mt-4 max-w-[30rem] text-[16px] leading-[1.6] text-ink-soft">{m.text}</p>
-                  <p className="mt-4 inline-flex rounded-full border border-line px-4 py-1.5 text-[13px] text-ink-soft">{m.note}</p>
+                  <p className="mt-4 inline-flex rounded-[17px] border border-line px-4 py-1.5 text-[13px] text-ink-soft max-[359px]:px-3 max-[359px]:text-[12px]">{m.note}</p>
                 </div>
               </article>
             ))}

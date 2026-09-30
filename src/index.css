@@ -38,7 +38,7 @@
   --color-mint: #a6f3e9;
   --color-ink: #121010;
   --color-ink-soft: #57504d;
-  --color-ink-mute: #8a837f;
+  --color-ink-mute: #6b6460;
   --color-line: rgba(18, 16, 16, 0.12);
   --color-studio: #efeeec;
   --color-card: #ffffff;
@@ -72,6 +72,15 @@ p { text-wrap: pretty; }
     var(--color-studio);
   color: var(--color-ink);
 }
+/* Două secțiuni studio una după alta: a doua pornește din gri plat,
+   ca lumina de sus să nu lase o cusătură la graniță. */
+.ground-studio + .ground-studio,
+#decorul > .ground-studio {
+  background:
+    linear-gradient(to bottom, var(--color-studio) 0, rgba(239,238,236,0) 180px),
+    radial-gradient(70% 60% at 50% 28%, #ffffff 0%, rgba(255,255,255,0) 70%),
+    var(--color-studio);
+}
 .ground-stage {
   background:
     radial-gradient(60% 55% at 50% 0%, #2b2624 0%, rgba(43,38,36,0) 75%),
@@ -79,8 +88,17 @@ p { text-wrap: pretty; }
   color: var(--color-bone);
   /* textul secundar pe scenă e cald, nu gri plat */
   --color-ink-soft: #b9b0aa;
-  --color-ink-mute: #8b837e;
+  --color-ink-mute: #9a928d;
   --color-line: rgba(243, 239, 235, 0.12);
+  /* #AD0003 are 2,5:1 pe negru, deci pe scenă conturul e roșul deschis */
+  --focus-ring: var(--color-red-soft);
+}
+/* Scenă care continuă scena de deasupra (Lista → Final): lumina nu
+   mai pornește de la marginea de sus. */
+.ground-stage.ground-cont {
+  background:
+    radial-gradient(60% 55% at 55% 58%, #2b2624 0%, rgba(43,38,36,0) 75%),
+    var(--color-stage);
 }
 
 /* Decorurile (doar blocul „Decorul”) */
@@ -89,7 +107,7 @@ p { text-wrap: pretty; }
   color: var(--color-ink);
 }
 .ground-spot {
-  background: radial-gradient(60% 75% at 50% 42%, #ffffff 0%, #d9d9d9 40%, #8f8f8f 80%, #5f5f5f 100%);
+  background: radial-gradient(60% 75% at 50% 42%, #ffffff 0%, #d9d9d9 40%, #b0b0b0 80%, #9a9a9a 100%);
   color: var(--color-ink);
 }
 .ground-brown {
@@ -118,6 +136,12 @@ p { text-wrap: pretty; }
   line-height: 0.92;
 }
 .ground-stage .accent { color: var(--color-red-soft); }
+/* OT Miniature are diacritice înalte; pe h2/h3 accentul e puțin mai mic și rândurile mai aerisite. H1 din Hero nu se atinge (I03). */
+h2.h-sec:has(.accent), h3.h-sec:has(.accent) { line-height: 1.16; }
+h2 .accent, h3 .accent { font-size: 1.06em; }
+/* „Oriunde.” (Final): „d”-ul din OT Miniature urcă spre coada lui „g” din „singur”. La 320, „î” din „împreună” atinge „p”-ul de deasupra. */
+footer h2.h-sec:has(.accent) { line-height: 1.2; }
+@media (max-width: 359px) { h2.h-sec:has(.accent) { line-height: 1.2; } }
 .title {
   font-family: var(--font-title);
   font-weight: 400;
@@ -139,14 +163,18 @@ p { text-wrap: pretty; }
   padding-block: clamp(96px, 11vw, 168px);
 }
 
-/* ── Apariție la scroll: o singură dată, discretă ─────────────── */
-.reveal {
-  opacity: 0;
-  transform: translateY(16px);
-  transition: opacity 0.7s cubic-bezier(0.22, 1, 0.36, 1),
-              transform 0.7s cubic-bezier(0.22, 1, 0.36, 1);
+/* ── Apariție la scroll: o singură dată, discretă ─────────────────
+   Stă în layer-ul components, ca o tranziție pusă cu o utilitate
+   Tailwind pe același element (cardurile Pain) să aibă prioritate. */
+@layer components {
+  .reveal {
+    opacity: 0;
+    transform: translateY(16px);
+    transition: opacity 0.7s cubic-bezier(0.22, 1, 0.36, 1),
+                transform 0.7s cubic-bezier(0.22, 1, 0.36, 1);
+  }
+  .reveal[data-in] { opacity: 1; transform: none; }
 }
-.reveal.is-in { opacity: 1; transform: none; }
 
 @keyframes fadeIn { from { opacity: 0 } to { opacity: 1 } }
 @keyframes fadeUp {
@@ -156,10 +184,12 @@ p { text-wrap: pretty; }
 .anim-fade-in { animation: fadeIn 1s ease-out both; }
 .anim-fade-up { animation: fadeUp 0.8s cubic-bezier(0.22, 1, 0.36, 1) both; }
 
-:focus-visible {
-  outline: 2px solid var(--color-red);
-  outline-offset: 3px;
-  border-radius: 6px;
+/* Focus: în layer-ul base, ca utilitățile Tailwind (rounded-*,
+   outline-none) să-l poată ajusta. Conturul urmează colțurile
+   elementului. scroll-margin-top ține elementul focusat sub header. */
+@layer base {
+  :focus-visible { outline: 2px solid var(--focus-ring, var(--color-red)); outline-offset: 3px; }
+  :where(a[href], button, input, select, textarea, summary, [tabindex]) { scroll-margin-top: 120px; }
 }
 
 @media (prefers-reduced-motion: reduce) {

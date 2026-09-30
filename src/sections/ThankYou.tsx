@@ -1,37 +1,61 @@
-import { useEffect, useState } from 'react'
+import { useEffect, useRef, useState } from 'react'
 import { ArrowUpRight } from 'lucide-react'
-import { IMG, THANKYOU, whatsappLink } from '../lib/content'
+import { BRAND, IMG, THANKYOU, titleText, whatsappLink } from '../lib/content'
 import type { Lead } from '../lib/utils'
-import { Ot } from '../components/ui'
+import { Ot, SectionTitle } from '../components/ui'
 
 /* /multumesc. Un singur lucru de făcut: WhatsApp, cu mesajul deja
-   scris. Pagina duce singură acolo după 5 secunde (prin `location`,
+   scris. Pagina duce singură acolo după 10 secunde (prin `location`,
    nu popup, deci nu e blocată). Numărătoarea se poate opri. */
 
-const SECONDS = 5
+const SECONDS = 10
+
+/* Adusă aici cu Înapoi (după click pe buton): fără numărătoare, altfel pagina te trimite din nou pe WhatsApp. */
+const cameBack = () => {
+  const nav = performance.getEntriesByType('navigation')[0] as PerformanceNavigationTiming | undefined
+  return nav?.type === 'back_forward' && new URL(nav.name).pathname.replace(/\/+$/, '') === '/multumesc'
+}
 
 export function ThankYou({ lead, onBack }: { lead: Lead; onBack: () => void }) {
   const href = whatsappLink(lead.name, lead.interest)
   const [left, setLeft] = useState(SECONDS)
-  const [stopped, setStopped] = useState(false)
+  const [stopped, setStopped] = useState(cameBack)
+  // Ce aude cititorul de ecran. Se schimbă de două ori: la intrare și la oprire.
+  const [announce, setAnnounce] = useState(() => (cameBack() ? THANKYOU.stopped : ''))
+  const ctaRef = useRef<HTMLAnchorElement>(null)
 
   useEffect(() => {
     const prev = document.title
-    document.title = `${THANKYOU.title} · Vera Lozovanu-Guțu`
+    document.title = titleText(THANKYOU.title).replace(/\.$/, '') + ' · ' + BRAND
     return () => {
       document.title = prev
     }
   }, [])
 
+  // Focusul pleacă de pe formular și vine pe titlu. Numărătoarea se anunță
+  // o singură dată, nu în fiecare secundă.
+  useEffect(() => {
+    document.getElementById('multumesc-titlu')?.focus({ preventScroll: true })
+    const t = window.setTimeout(() => setAnnounce((a) => a || THANKYOU.redirect(SECONDS)), 300)
+    return () => window.clearTimeout(t)
+  }, [])
+
   useEffect(() => {
     if (stopped) return
     if (left <= 0) {
-      window.location.assign(href)
+      // replace, nu assign: Înapoi de pe WhatsApp nu mai aduce aici.
+      window.location.replace(href)
       return
     }
     const t = window.setTimeout(() => setLeft((s) => s - 1), 1000)
     return () => window.clearTimeout(t)
   }, [left, stopped, href])
+
+  const stop = () => {
+    setStopped(true)
+    setAnnounce(THANKYOU.stopped)
+    ctaRef.current?.focus()
+  }
 
   return (
     <main className="ground-studio relative flex min-h-[100svh] flex-col overflow-hidden">
@@ -49,20 +73,53 @@ export function ThankYou({ lead, onBack }: { lead: Lead; onBack: () => void }) {
       </header>
 
       <div className="wrap relative grid flex-1 items-center gap-6 md:grid-cols-[1.1fr_0.9fr]">
-        <div className="relative z-10 py-12">
-          <p className="anim-fade-up flex items-center gap-3 text-[13px] text-ink-mute">
+        <div className="relative z-10 py-12 [@media(max-height:500px)]:py-4">
+          <p className="anim-fade-up flex items-center gap-3 text-[13px] text-ink-mute [@media(max-height:500px)]:hidden">
             <span className="h-px w-6 bg-current opacity-60" />
             {THANKYOU.eyebrow}
           </p>
-          <h1 className="anim-fade-up h-sec mt-6 text-[3rem] sm:text-[4.6rem]" style={{ animationDelay: '120ms' }}>
-            Locul tău e <span className="accent">rezervat.</span>
-          </h1>
-          <p className="anim-fade-up mt-6 max-w-[28rem] text-[17px] leading-[1.6] text-ink-soft" style={{ animationDelay: '240ms' }}>
+          <SectionTitle
+            as="h1"
+            id="multumesc-titlu"
+            tabIndex={-1}
+            title={THANKYOU.title}
+            className="anim-fade-up mt-6 text-[3rem] outline-none sm:text-[4.6rem] [@media(max-height:500px)]:mt-0 [@media(max-height:500px)]:text-[2.8rem]"
+            style={{ animationDelay: '120ms' }}
+          />
+          <div
+            className="anim-fade-up mt-4 text-[13px] text-ink-mute [@media(max-height:500px)]:mt-2"
+            style={{ animationDelay: '180ms' }}
+          >
+            {stopped ? (
+              <p aria-hidden="true">{THANKYOU.stopped}</p>
+            ) : (
+              <p>
+                <span aria-hidden="true">{THANKYOU.redirect(left)}</span>
+                <span className="sr-only">{THANKYOU.redirect(SECONDS)}</span>{' '}
+                <button
+                  type="button"
+                  onClick={stop}
+                  className="-mx-2 -my-3 inline-block px-2 py-3 underline underline-offset-4"
+                >
+                  {THANKYOU.stay}
+                </button>
+              </p>
+            )}
+            <p role="status" className="sr-only">
+              {announce}
+            </p>
+          </div>
+          <p
+            className="anim-fade-up mt-6 max-w-[28rem] text-[17px] leading-[1.6] text-ink-soft [@media(max-height:500px)]:mt-3"
+            style={{ animationDelay: '240ms' }}
+          >
             {THANKYOU.body}
           </p>
           <a
+            ref={ctaRef}
             href={href}
-            className="anim-fade-up group mt-9 inline-flex items-center gap-5 rounded-full bg-red py-2 pl-6 pr-2 text-white transition-colors duration-300 hover:bg-red-deep"
+            onClick={() => setStopped(true)}
+            className="anim-fade-up group mt-9 inline-flex items-center gap-5 rounded-full bg-red py-2 pl-6 pr-2 text-white transition-colors duration-300 hover:bg-red-deep [@media(max-height:500px)]:mt-5"
             style={{ animationDelay: '360ms' }}
           >
             <span className="text-[15px] font-medium">{THANKYOU.cta}</span>
@@ -70,18 +127,6 @@ export function ThankYou({ lead, onBack }: { lead: Lead; onBack: () => void }) {
               <ArrowUpRight size={18} />
             </span>
           </a>
-          <p className="anim-fade-up mt-4 text-[13px] text-ink-mute" style={{ animationDelay: '440ms' }} aria-live="polite">
-            {stopped ? (
-              THANKYOU.stopped
-            ) : (
-              <>
-                {THANKYOU.redirect} ({left}){' '}
-                <button type="button" onClick={() => setStopped(true)} className="underline underline-offset-4">
-                  {THANKYOU.stay}
-                </button>
-              </>
-            )}
-          </p>
           <p className="anim-fade-up title mt-14 text-[1.8rem] italic text-ink/60" style={{ animationDelay: '560ms' }}>
             {THANKYOU.whisper}
           </p>
