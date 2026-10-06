@@ -16,11 +16,11 @@ export function Method() {
   return (
     <section id="metoda" ref={ref} data-tone="dark" className="ground-stage relative overflow-hidden section">
       <img
-        src={IMG('vera-gand')}
+        src={IMG('vera-negru-profil-asezata')}
         alt=""
         aria-hidden="true"
-        width={995}
-        height={1500}
+        width={1552}
+        height={2000}
         loading="lazy"
         className="pointer-events-none absolute right-[max(-6%,calc(50%_-_800px))] top-24 hidden h-[640px] w-auto opacity-90 [mask-image:linear-gradient(to_bottom,black_55%,transparent),linear-gradient(to_left,black_60%,transparent)] [mask-composite:intersect] min-[1180px]:block"
       />

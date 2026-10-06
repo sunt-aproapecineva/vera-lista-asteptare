@@ -57,10 +57,10 @@ export function Hero() {
         <div className="relative -mx-5 mt-6 h-[62svh] md:mx-0 md:mt-0 md:h-auto">
           <motion.div style={{ y: veraY }} className="absolute bottom-0 left-1/2 h-full -translate-x-1/2 md:h-[min(90svh,calc(100svh_-_88px),68vw,960px)]">
             <img
-              src={IMG('vera-costum')}
+              src={IMG('vera-costum-cravata')}
               alt="Vera Lozovanu-Guțu, în costum, cu cravată roșie"
-              width={748}
-              height={1800}
+              width={780}
+              height={2000}
               fetchPriority="high"
               className="anim-fade-in h-full w-auto max-w-none select-none"
               draggable={false}

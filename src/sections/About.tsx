@@ -17,10 +17,10 @@ export function About() {
       <div className="wrap grid gap-10 pt-[clamp(96px,11vw,168px)] lg:grid-cols-[0.95fr_1.05fr] lg:gap-16">
         <div className="relative order-2 -mx-5 h-[70svh] max-h-[760px] min-h-[460px] overflow-hidden sm:mx-0 lg:order-1 lg:h-[780px] lg:overflow-visible">
           <img
-            src={IMG('vera-portret')}
+            src={IMG('vera-negru-portret')}
             alt="Vera Lozovanu-Guțu, portret, în rochie neagră"
-            width={1094}
-            height={1500}
+            width={1296}
+            height={2000}
             loading="lazy"
             className="absolute bottom-0 left-1/2 h-full w-auto max-w-none -translate-x-1/2 select-none"
             draggable={false}

@@ -42,6 +42,7 @@ Tot textul stă în [`src/lib/content.ts`](src/lib/content.ts).
 - **Titluri:** Helvetica Neue, cu **un** cuvânt în OT Miniature italic roșu (`SectionTitle` din `components/ui.tsx`).
 - **Roșul `#AD0003`** e doar accent: butoane, cuvântul din titlu, cifre.
 - **Animații puține:** o singură apariție discretă la scroll, blocul „Decorul” și un parallax ușor în hero.
+- **Poze:** cele 15 fotografii editate ale Verei, decupate, stau în [`poze-vera-decupate/`](poze-vera-decupate/), la 3000px. Acolo e și lista cu locul fiecăreia pe pagină. Copiile web folosite pe landing sunt în `public/img/`.
 
 ## Ce mai lipsește
 

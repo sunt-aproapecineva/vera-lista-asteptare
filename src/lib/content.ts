@@ -123,13 +123,13 @@ export type DecorTone = 'mint' | 'spot' | 'brown' | 'red'
 
 export const DECOR = {
   intro: 'Nu construim zece versiuni ale tale.',
-  introImg: 'vera-rade',
+  introImg: 'vera-alb-brate-deschise',
   role: 'Rolul: tu',
   sets: [
-    { name: 'Camera', line: 'Reelul pe care îl amâni de o\u00a0lună.', tone: 'mint' as DecorTone, img: 'vera-mana' },
-    { name: 'Ședința', line: 'Luni, la zece, cu toți ochii pe tine.', tone: 'spot' as DecorTone, img: 'vera-costum' },
-    { name: 'Acasă', line: 'Discuția pe care o\u00a0tot ocolești.', tone: 'brown' as DecorTone, img: 'vera-portret' },
-    { name: 'Scena', line: 'Cinci minute la microfon, cu ai tăi în sală.', tone: 'red' as DecorTone, img: 'vera-dans' },
+    { name: 'Camera', line: 'Reelul pe care îl amâni de o\u00a0lună.', tone: 'mint' as DecorTone, img: 'vera-piele-zambet' },
+    { name: 'Ședința', line: 'Luni, la zece, cu toți ochii pe tine.', tone: 'spot' as DecorTone, img: 'vera-negru-intreaga' },
+    { name: 'Acasă', line: 'Discuția pe care o\u00a0tot ocolești.', tone: 'brown' as DecorTone, img: 'vera-negru-asezata-zambet' },
+    { name: 'Scena', line: 'Cinci minute la microfon, cu ai tăi în sală.', tone: 'red' as DecorTone, img: 'vera-esarfa-sus' },
   ],
   outro: ['Decorul se schimbă.', 'Tu rămâi.', ''] as Title,
   outroSub: 'Asta lucrăm cu MPA: același om pe cameră, la ședință, acasă și pe scenă.',

@@ -133,11 +133,11 @@ export function ThankYou({ lead, onBack }: { lead: Lead; onBack: () => void }) {
         </div>
         <div className="relative h-[48svh] md:h-[82svh] md:self-end">
           <img
-            src={IMG('vera-esarfa')}
+            src={IMG('vera-piele-rade')}
             alt=""
             aria-hidden="true"
-            width={1533}
-            height={1600}
+            width={884}
+            height={2000}
             className="anim-fade-in absolute bottom-0 left-1/2 h-full w-auto max-w-none -translate-x-1/2"
           />
         </div>

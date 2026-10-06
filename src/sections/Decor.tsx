@@ -37,11 +37,11 @@ const stageAt = (v: number) =>
 /* toate cadrele, o singură dată: intro/final + câte unul pe decor */
 const FRAMES = [DECOR.introImg, ...SETS.map((s) => s.img)]
 const SIZES: Record<string, [number, number]> = {
-  'vera-rade': [1058, 1700],
-  'vera-mana': [679, 1600],
-  'vera-costum': [748, 1800],
-  'vera-portret': [1094, 1500],
-  'vera-dans': [1325, 1600],
+  'vera-alb-brate-deschise': [1441, 2000],
+  'vera-piele-zambet': [1217, 2000],
+  'vera-negru-intreaga': [780, 2000],
+  'vera-negru-asezata-zambet': [1186, 2000],
+  'vera-esarfa-sus': [1073, 2000],
 }
 
 /* Preferința de mișcare se citește o singură dată, la montare.

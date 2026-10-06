@@ -24,10 +24,10 @@ export function Final() {
         </div>
         <div className="relative h-[60svh] md:h-[86svh]">
           <img
-            src={IMG('vera-esarfa')}
+            src={IMG('vera-esarfa-dans')}
             alt="Vera dansând, cu o eșarfă albă în mișcare"
-            width={1533}
-            height={1600}
+            width={1637}
+            height={2000}
             loading="lazy"
             className="absolute bottom-0 left-1/2 h-full w-auto max-w-none -translate-x-1/2 select-none md:left-[45%] lg:left-[60%] xl:left-[58%]"
             draggable={false}
